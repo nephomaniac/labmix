@@ -654,7 +654,11 @@ class SshConnection():
                 output = ""
             if escape_ansi_codes:
                 ansi_esc = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-                output = ansi_esc.sub('', output.decode('utf-8'))
+                try:
+                   output = output.decode('utf-8')
+                except AttributeError:
+                    pass
+                output = ansi_esc.sub('', output)
             if listformat:
                 # return output as list of lines
                 output = output.splitlines()
