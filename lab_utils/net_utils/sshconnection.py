@@ -72,6 +72,7 @@ import time
 import types
 import sys
 from functools import reduce
+from scp import SCPClient, SCPException
 try:
     from urlparse import urlparse
 except:
@@ -245,6 +246,7 @@ class SshConnection():
         self.log = logger or LabLogger(host)
         self.verbose = verbose
         self._sftp = None
+        self._scp = None
         self.key_files = key_files or []
         if not isinstance(self.key_files, list):
             self.key_files = str(self.key_files).split(',')
@@ -938,6 +940,14 @@ class SshConnection():
                 pass
             if chan:
                 chan.close()
+
+    @property
+    def scp(self):
+        if self._scp:
+            return self._scp
+        else:
+            self._scp = SCPClient(self.connection.get_transport())
+        return self._scp
 
     @property
     def sftp(self):
