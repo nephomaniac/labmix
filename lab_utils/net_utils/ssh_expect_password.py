@@ -1,6 +1,6 @@
 
 
-from cloud_utils.net_utils.sshconnection import SshCbReturn
+from lab_utils.net_utils.sshconnection import SshCbReturn
 import re
 
 

@@ -12,11 +12,11 @@ from functools import wraps
 
 # Force ansi escape sequences (markup) in output.
 # This can also be set as an env var
-_EUTESTER_FORCE_ANSI_ESCAPE = False
+_LABMIX_FORCE_ANSI_ESCAPE = False
 # Allow ansi color codes outside the standard range. For example some systems support
 # a high intensity color range from 90-109.
 # This can also be set as an env var
-_EUTESTER_NON_STANDARD_ANSI_SUPPORT = False
+_LABMIX_NON_STANDARD_ANSI_SUPPORT = False
 
 
 class TextStyle():
@@ -75,13 +75,13 @@ def markup(text, markups=[1], resetvalue="\033[0m", force=None, allow_nonstandar
     :param markups: a value or list of values representing ansi codes.
     :param resetvalue: string used to reset the terminal, default: "\33[0m"
     :param force: boolean, if set will add escape sequences regardless of tty. Defaults to the
-                  class attr '_EUTESTER_FORCE_ANSI_ESCAPE' or the env variable:
-                  'EUTESTER_FORCE_ANSI_ESCAPE' if it is set.
+                  class attr '_LABMIX_FORCE_ANSI_ESCAPE' or the env variable:
+                  'LABMIX_FORCE_ANSI_ESCAPE' if it is set.
     :param allow_nonstandard: boolean, if True all markup values will be used. If false
                               the method will attempt to remap the markup value to a
                               standard ansi value to support tools such as Jenkins, etc.
-                              Defaults to the class attr '._EUTESTER_NON_STANDARD_ANSI_SUPPORT'
-                              or the environment variable 'EUTESTER_NON_STANDARD_ANSI_SUPPORT'
+                              Defaults to the class attr '._LABMIX_NON_STANDARD_ANSI_SUPPORT'
+                              or the environment variable 'LABMIX_NON_STANDARD_ANSI_SUPPORT'
                               if set.
     :param do_html: boolean, if True will attempt to convert the ascii escape sequences into
                     similar html tags/output
@@ -99,14 +99,14 @@ def markup(text, markups=[1], resetvalue="\033[0m", force=None, allow_nonstandar
                                                              close_bracket=html_close)
     else:
         if force is None:
-            force = os.environ.get('EUTESTER_FORCE_ANSI_ESCAPE', _EUTESTER_FORCE_ANSI_ESCAPE)
+            force = os.environ.get('LABMIX_FORCE_ANSI_ESCAPE', _LABMIX_FORCE_ANSI_ESCAPE)
             if str(force).upper() == 'TRUE':
                 force = True
             else:
                 force = False
         if allow_nonstandard is None:
-            allow_nonstandard = os.environ.get('EUTESTER_NON_STANDARD_ANSI_SUPPORT',
-                                               _EUTESTER_NON_STANDARD_ANSI_SUPPORT)
+            allow_nonstandard = os.environ.get('LABMIX_NON_STANDARD_ANSI_SUPPORT',
+                                               _LABMIX_NON_STANDARD_ANSI_SUPPORT)
             if str(allow_nonstandard).upper() == 'TRUE':
                 allow_nonstandard = True
             else:

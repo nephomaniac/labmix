@@ -1,6 +1,6 @@
 import subprocess
 from sys import stderr
-from cloud_utils.log_utils import red
+from lab_utils.log_utils import red
 
 
 

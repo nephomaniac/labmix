@@ -1,7 +1,7 @@
-from cloud_utils.net_utils.sshconnection import SshConnection
-from cloud_utils.log_utils import red, green, blue
-from cloud_utils.log_utils.eulogger import Eulogger
-from cloud_utils.log_utils import get_traceback, get_terminal_size
+from lab_utils.net_utils.sshconnection import SshConnection
+from lab_utils.log_utils import red, green, blue
+from lab_utils.log_utils.lablogger import Lablogger
+from lab_utils.log_utils import get_traceback, get_terminal_size
 import argparse
 import os
 import re
@@ -63,7 +63,7 @@ class RemoteCommands(object):
         self.results = {}
         self.maxwait = .5
         self.ips = ips or self.args.ips or []
-        self.logger = Eulogger('RemoteCmds', stdout_level=self.log_level)
+        self.logger = Lablogger('RemoteCmds', stdout_level=self.log_level)
         if self.ips:
             if isinstance(self.ips, basestring):
                 self.ips = str(self.ips).replace(',', ' ')
@@ -94,7 +94,7 @@ class RemoteCommands(object):
                 start = time.time()
                 try:
                     self.logger.debug('Connecting to new host:' + str(host))
-                    logger = Eulogger(str(host))
+                    logger = Lablogger(str(host))
                     ssh = SshConnection(host=host, username=self.username, password=self.password,
                                         keypath=self.keypath, debug_connect=True,
                                         timeout=self.args.timeout, verbose=True, logger=logger)

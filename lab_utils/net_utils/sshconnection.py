@@ -1,34 +1,4 @@
-# Software License Agreement (BSD License)
-#
-# Copyright (c) 2009-2011, Eucalyptus Systems, Inc.
-# All rights reserved.
-#
-# Redistribution and use of this software in source and binary forms, with or
-# without modification, are permitted provided that the following conditions
-# are met:
-#
-#   Redistributions of source code must retain the above
-#   copyright notice, this list of conditions and the
-#   following disclaimer.
-#
-#   Redistributions in binary form must reproduce the above
-#   copyright notice, this list of conditions and the
-#   following disclaimer in the documentation and/or other
-#   materials provided with the distribution.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
-#
-# Author: matt.clark@eucalyptus.com
+# Author: clarkmatthew
 """
 Created on Mar 7, 2012
 @author: clarkmatthew
@@ -85,13 +55,13 @@ example with proxy:
     SSH - Connected to 10.1.1.5 via proxy host:192.168.1.2:22
 
     In [5]: instance_ssh.sys('hostname')
-    Out[5]: ['euca_10_1_1_5.eucalyptus_cloud.com']
+    Out[5]: ['MyHostname']
 
 """
 
 import copy
 from httplib import HTTPConnection, CannotSendRequest
-from cloud_utils.log_utils.eulogger import  Eulogger
+from lab_utils.log_utils.lablogger import  Lablogger
 import os
 import paramiko
 from paramiko.sftp_client import SFTPClient
@@ -268,7 +238,7 @@ class SshConnection():
         self.timeout = timeout
         self.banner_timeout = banner_timeout
         self.retry = retry
-        self.log = logger or Eulogger(host)
+        self.log = logger or Lablogger(host)
         self.verbose = verbose
         self._sftp = None
         self.key_files = key_files or []

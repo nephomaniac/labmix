@@ -1,40 +1,9 @@
-# Software License Agreement (BSD License)
-#
-# Copyright (c) 2009-2011, Eucalyptus Systems, Inc.
-# All rights reserved.
-#
-# Redistribution and use of this software in source and binary forms, with or
-# without modification, are permitted provided that the following conditions
-# are met:
-#
-#   Redistributions of source code must retain the above
-#   copyright notice, this list of conditions and the
-#   following disclaimer.
-#
-#   Redistributions in binary form must reproduce the above
-#   copyright notice, this list of conditions and the
-#   following disclaimer in the documentation and/or other
-#   materials provided with the distribution.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-# POSSIBILITY OF SUCH DAMAGE.
-#
 # author: clarkmatthew
-# modified by: Trevor Hodde
 
 '''
     Example:
-    import eulogger
-    self.logger = eulogger.Eulogger(name='euca')
+    import lablogger
+    self.logger = lablogger.LabLogger(name='LABTEST')
     self.log = self.logger.log
 
     self.debug("This is a debug message")
@@ -47,12 +16,12 @@ import logging
 import time
 
 
-class Eulogger(logging.Logger):
-    # constructor for the Eulogger
+class LabLogger(logging.Logger):
+    # constructor for the LabLogger
 
     def __init__(self,
                  identifier,
-                 parent_logger_name='eulogger',
+                 parent_logger_name='lablogger',
                  stdout_level="debug",
                  stdout_format=None,
                  logfile="",
@@ -86,7 +55,7 @@ class Eulogger(logging.Logger):
         # Debug for init...
         if show_init:
             print ('-----------------------------------------------\n'
-                   'parent_logger_name:{0}\neulogger init:\nidentifier:{1}\nstdout_level:{2}\n'
+                   'parent_logger_name:{0}\nlablogger init:\nidentifier:{1}\nstdout_level:{2}\n'
                    'stdout_format:{3}\nlogfile:{4}\nlogfile_level:{5}\nfile_format:{6}\n'
                    '\n-----------------------------------------------'
                    .format(parent_logger_name, identifier, stdout_level, stdout_format, logfile,
@@ -151,7 +120,7 @@ class Eulogger(logging.Logger):
     def _log(self, level, msg, args, exc_info=None, extra=None):
         msg = "[{0}]: {1}".format(self.identifier, msg)
         try:
-            return super(Eulogger, self)._log(level, msg, args, exc_info=exc_info, extra=extra)
+            return super(LabLogger, self)._log(level, msg, args, exc_info=exc_info, extra=extra)
         except TypeError:
             return logging.Logger._log(self, level, msg, args, exc_info=exc_info, extra=extra)
 

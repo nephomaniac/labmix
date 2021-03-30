@@ -3,12 +3,12 @@
 import select
 import threading
 import time
-from cloud_utils.log_utils.eulogger import Eulogger
-from cloud_utils.log_utils import get_traceback
-from cloud_utils.log_utils import printinfo, markup
-from cloud_utils.file_utils import render_file_template
-from cloud_utils.net_utils import test_port_status, get_network_info_for_cidr
-from cloud_utils.net_utils.sshconnection import (
+from lab_utils.log_utils.lablogger import LabLogger
+from lab_utils.log_utils import get_traceback
+from lab_utils.log_utils import printinfo, markup
+from lab_utils.file_utils import render_file_template
+from lab_utils.net_utils import test_port_status, get_network_info_for_cidr
+from lab_utils.net_utils.sshconnection import (
     CommandExitCodeException,
     SshCbReturn,
     SshConnection
@@ -89,7 +89,7 @@ class Machine(object):
         self.password = password
         self.verbose = verbose
         if logger is None:
-            logger = Eulogger(identifier=self._identifier, stdout_level=log_level)
+            logger = LabLogger(identifier=self._identifier, stdout_level=log_level)
         self.log = logger
         self.ssh_connect_kwargs = {'host': self.hostname,
                                    'username': self.username,
@@ -479,7 +479,7 @@ class Machine(object):
             return self.ssh.cmd(cmd, verbose=verbose, timeout=timeout, listformat=listformat,
                                 cb=cb, cbargs=cbargs)
         else:
-            raise Exception("Euinstance ssh connection is None")
+            raise Exception("Machine instance ssh connection is None")
 
     def sys_until_found(self, cmd, regex, verbose=True, timeout=120, listformat=True,
                         net_namespace=None):
@@ -1344,7 +1344,7 @@ class Machine(object):
         # this tmp file will be created on remote instance to write stderr from dd to...
         if not tmpfile:
             tstamp = time.time()
-            tmpfile = '/tmp/eutesterddcmd.{0}.{1}'.format(self.hostname, str(int(tstamp))[-4:])
+            tmpfile = '/tmp/labmixddcmd.{0}.{1}'.format(self.hostname, str(int(tstamp))[-4:])
         tmppidfile = tmpfile + ".pid"
         # init return dict
         ret = {

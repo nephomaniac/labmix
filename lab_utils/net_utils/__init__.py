@@ -6,11 +6,11 @@ import subprocess
 import sys
 import time
 import threading
-from cloud_utils.system_utils import local
-from cloud_utils.log_utils import get_traceback
-from cloud_utils.net_utils.ip_rx import remote_receiver, START_MESSAGE
-from cloud_utils.net_utils.ip_tx import remote_sender, send_packet
-from cloud_utils.net_utils.sshconnection import SshCbReturn, SshConnection
+from lab_utils.system_utils import local
+from lab_utils.log_utils import get_traceback
+from lab_utils.net_utils.ip_rx import remote_receiver, START_MESSAGE
+from lab_utils.net_utils.ip_tx import remote_sender, send_packet
+from lab_utils.net_utils.sshconnection import SshCbReturn, SshConnection
 
 
 def test_port_status(ip,
@@ -223,7 +223,7 @@ def packet_test(sender_ssh, receiver_ssh, protocol, dest_ip=None, src_addrs=None
     #    - 10 packets
     >>packet_test(ssh_tx, ssh_rx, protocol=17, port=101, count=10, timeout=10, verbose=False)
 
-    # Example 2) SCTP between 2 eutester Instance objects using:
+    # Example 2) SCTP between 2 ssh Instance objects using:
     #    -the SCTP protocol number 132
     #    -sending to the instance's private ip address
     #    -filtering on the senders ip address

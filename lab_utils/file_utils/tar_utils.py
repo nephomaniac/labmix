@@ -6,7 +6,7 @@ local and remote tar files.
 #####################################################################################
 ### Example usage for a tar file on the local file system (which is gzip'd)...
 
-In [1]:from eutester.utils.file_utils.tar_utils import Local_Tarutils
+In [1]:from labmix.lab_utils.file_utils.tar_utils import Local_Tarutils
 In [2]:lt = Local_Tarutils('/Users/clarkmatthew/brokerlogs.tar.gz')
 In [3]:lt.show_members()
     axis2c.log
@@ -29,7 +29,7 @@ In [6]: ls -a
 #####################################################################################
 ### Example usage for a tar file on a remote server, contents are listed then downloaded.
 
-In [1]: from eutester.utils.file_utils.tar_utils import Http_Tarutils
+In [1]: from labmix.lab_utils.file_utils.tar_utils import Http_Tarutils
 In [2]: ht = Http_Tarutils('http://10.111.5.119/matt/testfiles/tarfile.tar')
 In [3]: ht.show_members()
     file1.txt
