@@ -3,11 +3,11 @@ import os
 import re
 import sys
 import traceback
-import StringIO
 import struct
 import types
 import fcntl
 import termios
+from io import StringIO
 from functools import wraps
 
 # Force ansi escape sequences (markup) in output.
@@ -241,7 +241,7 @@ def get_traceback():
             traceback.print_exception(*sys.exc_info(), file=out)
             out.seek(0)
             buf = out.read()
-        except Exception, e:
+        except Exception as e:
                 buf = "Could not get traceback"+str(e)
         return str(buf)
 
@@ -288,13 +288,13 @@ def printinfo(func):
     def methdecor(*func_args, **func_kwargs):
         _args_dict = {}  # If method has this kwarg populate with args here
         try:
-            defaults = func.func_defaults
+            defaults = func.__defaults__
             kw_count = len(defaults or [])
             selfobj = None
-            arg_count = func.func_code.co_argcount - kw_count
-            var_names = func.func_code.co_varnames[:func.func_code.co_argcount]
+            arg_count = func.__code__.co_argcount - kw_count
+            var_names = func.__code__.co_varnames[:func.__code__.co_argcount]
             arg_names = var_names[:arg_count]
-            kw_names = var_names[arg_count:func.func_code.co_argcount]
+            kw_names = var_names[arg_count:func.__code__.co_argcount]
             kw_defaults = {}
             for kw_name in kw_names:
                 kw_defaults[kw_name] = defaults[kw_names.index(kw_name)]
@@ -332,9 +332,9 @@ def printinfo(func):
                     kw_string += str(func_kwargs[kw])
                 else:
                     kw_string += str(kw_defaults[kw])
-            debugstring = '\n--->(' + str(os.path.basename(func.func_code.co_filename)) + \
-                          ":" + str(func.func_code.co_firstlineno) + ")Starting method: " + \
-                          str(func.func_name) + '(' + arg_string + kw_string + ')'
+            debugstring = '\n--->(' + str(os.path.basename(func.__code__.co_filename)) + \
+                          ":" + str(func.__code__.co_firstlineno) + ")Starting method: " + \
+                          str(func.__name__) + '(' + arg_string + kw_string + ')'
             debugmethod = None
             if selfobj and hasattr(selfobj, 'log'):
                 logger = getattr(selfobj, 'log', None)
@@ -344,10 +344,10 @@ def printinfo(func):
             if debugmethod:
                 debugmethod(debugstring)
             else:
-                print debugstring
-        except Exception, e:
-            print get_traceback()
-            print 'printinfo method decorator error:' + str(e)
+                print(debugstring)
+        except Exception as e:
+            print((get_traceback()))
+            print(('printinfo method decorator error:' + str(e)))
         return func(*func_args, **func_kwargs)
     return methdecor
 
@@ -360,6 +360,6 @@ def get_line(length=None):
                 length = 80
         except:
             length = 80
-    for x in xrange(0,int(length-2)):
+    for x in range(0,int(length-2)):
         line += "-"
         return "\n" + line + "\n"

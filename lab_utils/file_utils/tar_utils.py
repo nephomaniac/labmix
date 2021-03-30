@@ -63,8 +63,8 @@ import os
 import re
 import time
 import tarfile
-import urllib2
-import cStringIO
+import urllib.request, urllib.error, urllib.parse
+import io
 import errno
 
 
@@ -411,12 +411,12 @@ class Http_Tarutils(Tarutils):
             destfile = self.make_path(destfile)
             dfile = open(destfile, 'w+')
         else:
-            dfile = cStringIO.StringIO()
+            dfile = io.StringIO()
         # form our http request
-        request = urllib2.Request(url)
+        request = urllib.request.Request(url)
         request.headers['Range'] = 'bytes=%s-%s' % (start, end)
         # open http connection
-        remotefile = urllib2.urlopen(request)
+        remotefile = urllib.request.urlopen(request)
         # If content length or range is not what we expected throw an error...
         # Note: content range in bytes is formated like: "byte <start>-<end>/<total bytes>
         range = remotefile.headers.get('Content-Range')
@@ -428,9 +428,9 @@ class Http_Tarutils(Tarutils):
         # Now try to parse the ranges...
         try:
             rangestart, rangeend = re.search("\d+-\d+", range).group().split('-')
-        except Exception, e:
-            print "Couldn't derive rangestart and rangeend from string:" + str(
-                range) + ", err:" + str(e)
+        except Exception as e:
+            print(("Couldn't derive rangestart and rangeend from string:" + str(
+                range) + ", err:" + str(e)))
         else:
             if int(rangestart) != int(start) or int(rangeend) != int(end):
                 raise Exception("Range request not met. (start:" + str(start) + " vs rangestart:" +
@@ -447,7 +447,7 @@ class Http_Tarutils(Tarutils):
         Get remote file size for the http header
         '''
         url = uri or self.uri
-        site = urllib2.urlopen(url)
+        site = urllib.request.urlopen(url)
         size = int(site.headers.get('Content-Length'))
         self.filesize = size
         return size

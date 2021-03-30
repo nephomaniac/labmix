@@ -157,6 +157,7 @@ def remote_receiver(ssh, src_addrs=None, proto=17, dst_addrs=None, port=None,
     """
     script = sftp_file(ssh, verbose_level=verbose_level)
     cmd = "python {0} -o {1} -c {2} -v{3} ".format(script, proto, count, verbose_level)
+    lines = ""
     if src_addrs:
         cmd += " -s '{0}' ".format(src_addrs)
     if dst_addrs:
@@ -207,7 +208,7 @@ def get_proto_name(number):
     :param number: int, protocol number
     :return: string, protocol name if found, else the number as a string
     """
-    for proto, value in socket.__dict__.iteritems():
+    for proto, value in socket.__dict__.items():
         if proto.startswith('IPPROTO_') and value == number:
             return str(proto).replace('IPPROTO_', '')
     return str(number)
@@ -228,11 +229,11 @@ def parse_packet_count(results_dict, srcaddr=None, dstaddr=None, port=None):
         # srcaddr is not part of the filter criteria, flatten the dict combining
         # combining entries per destination addr
         dest_packets = {}
-        for addr, y in packets.iteritems():
-            for d, p in y.iteritems():
+        for addr, y in packets.items():
+            for d, p in y.items():
                 if not dest_packets.get(d):
                     dest_packets[d] = {}
-                for pn, cnt in p.iteritems():
+                for pn, cnt in p.items():
                     dest_packets[d][pn] = ((dest_packets.get(d, None) and
                                             dest_packets[d].get(pn, None) or 0) + cnt)
         dest_packets = dest_packets
@@ -244,8 +245,8 @@ def parse_packet_count(results_dict, srcaddr=None, dstaddr=None, port=None):
         # dstaddr is not part the filter criteria, flatten the dict combing entries
         # per port
         ports = {}
-        for dst, pdict in dest_packets.iteritems():
-            for port, cnt in pdict.iteritems():
+        for dst, pdict in dest_packets.items():
+            for port, cnt in pdict.items():
                 ports[port] = ports.get(port, 0) + cnt
     if not ports:
         return 0
@@ -255,7 +256,7 @@ def parse_packet_count(results_dict, srcaddr=None, dstaddr=None, port=None):
         # port is not part of the filter criteria, return the total number of
         # remaining packets
         count = 0
-        for port, cnt in ports.iteritems():
+        for port, cnt in ports.items():
             count += cnt
         return count
 
@@ -436,7 +437,7 @@ if __name__ == "__main__":
                     pass
             raise
         if BIND or socktype == socket.SOCK_STREAM:
-            bport = DSTPORTS.iterkeys().next()
+            bport = next(iter(DSTPORTS.keys()))
             debug("Binding to:'{0}':{1}".format(HOST, bport), DEBUG)
             sock.bind((HOST, bport))
         connection = None
@@ -550,7 +551,7 @@ if __name__ == "__main__":
         results['elapsed'] = float(elapsed)
         # print "Packets:{0}, Time:{1}".format(pkts, elapsed)
         out = "\n{0}\n".format(json.dumps(results, indent=4, sort_keys=True))
-        print out
+        print(out)
         if options.resultsfile:
             with open(options.resultsfile, 'a+') as res_file:
                 res_file.write(out)

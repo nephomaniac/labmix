@@ -60,8 +60,8 @@ example with proxy:
 """
 
 import copy
-from httplib import HTTPConnection, CannotSendRequest
-from lab_utils.log_utils.lablogger import  Lablogger
+from http.client import HTTPConnection, CannotSendRequest
+from lab_utils.log_utils.lablogger import  LabLogger
 import os
 import paramiko
 from paramiko.sftp_client import SFTPClient
@@ -71,7 +71,11 @@ import socket
 import time
 import types
 import sys
-from urlparse import urlparse
+from functools import reduce
+try:
+    from urlparse import urlparse
+except:
+    from urllib.parse import urlparse
 import termios
 import tty
 
@@ -86,7 +90,7 @@ def get_ipv4_lookup(hostname, port=22, debug_method=None, verbose=False):
     :return: list of ip addresses (strings in a.b.c.d format)
     """
     if not verbose or not debug_method:
-        def debug_method(msg):
+        def debug_method(msg, verbose=False):
             return
 
     get_ipv4_ip = False
@@ -109,7 +113,7 @@ def get_ipv4_lookup(hostname, port=22, debug_method=None, verbose=False):
                 iplist.append(str(addr[4][0]))
             debug_method('Resolved hostname:' + str(hostname) + ' to IP(s):' +
                          ",".join(iplist), verbose=verbose)
-        except Exception, de:
+        except Exception as de:
             debug_method('Error looking up DNS ip for hostname:' + str(hostname) +
                          ", err:" + str(de))
     else:
@@ -121,12 +125,12 @@ def get_ipv4_lookup(hostname, port=22, debug_method=None, verbose=False):
 class SFTPifc(SFTPClient):
 
     def debug(self, msg, verbose=True):
-        print (str(msg))
+        print((str(msg)))
 
     def get(self, remotepath, localpath, callback=None):
         try:
             super(SFTPifc, self).get(remotepath, localpath, callback=callback)
-        except Exception, ge:
+        except Exception as ge:
             self.debug('Error during sftp get. Remote:"{0}", Local:"{1}"'
                        .format(remotepath, localpath))
             raise type(ge)('Error during sftp get. Remotepath:"{0}", Localpath:"{1}".\n Err:{2}'
@@ -136,7 +140,7 @@ class SFTPifc(SFTPClient):
         try:
             super(SFTPifc, self).put(localpath=localpath, remotepath=remotepath,
                                      callback=callback, confirm=confirm)
-        except Exception, pe:
+        except Exception as pe:
             raise type(pe)('Error during sftp put. Remotepath:"{0}", Localpath:"{1}".\n Err:{2}'
                            .format(remotepath, localpath, str(pe)))
 
@@ -238,11 +242,11 @@ class SshConnection():
         self.timeout = timeout
         self.banner_timeout = banner_timeout
         self.retry = retry
-        self.log = logger or Lablogger(host)
+        self.log = logger or LabLogger(host)
         self.verbose = verbose
         self._sftp = None
         self.key_files = key_files or []
-        if not isinstance(self.key_files, types.ListType):
+        if not isinstance(self.key_files, list):
             self.key_files = str(self.key_files).split(',')
         self.find_keys = find_keys
         self.debug_connect = debug_connect
@@ -321,11 +325,11 @@ class SshConnection():
         proxy_password = proxy_password or self.proxy_password
         proxy_keypath = proxy_keypath or self.proxy_keypath
         key_files = key_files or self.key_files or []
-        if key_files and not isinstance(key_files, types.ListType):
+        if key_files and not isinstance(key_files, list):
             key_files = key_files.split(',')
 
         # Make sure there is at least one likely way to authenticate...
-        print 'PRoxy connect using password:{0} username:{1}'.format(proxy_password, proxy_username)
+        print(('PRoxy connect using password:{0} username:{1}'.format(proxy_password, proxy_username)))
         if ((proxy_username is not None) and
                 (key_files or self.find_keys or
                  proxy_keypath is not None or
@@ -342,7 +346,7 @@ class SshConnection():
                 #p_transport = paramiko.Transport(proxy_host)
                 ssh = paramiko.SSHClient()
                 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                print 'Attempting ssh transport connect: {0}'.format(proxy_host)
+                print(('Attempting ssh transport connect: {0}'.format(proxy_host)))
                 ssh.connect(hostname=host, username=proxy_username, port=port)
                 #ssh._transport = p_transport
                 #self.debug("Proxy auth -Using local keys, no keypath/password provided",
@@ -351,7 +355,7 @@ class SshConnection():
                 #ssh._auth(username=proxy_username, password=proxy_password, pkey=proxy_keypath,
                 #          key_filenames=key_files, allow_agent=True, look_for_keys=True,
                 #          gss_auth=True, gss_kex=True, gss_deleg_creds=True, gss_host=True)
-                print 'done with connect'
+                print('done with connect')
                 p_transport = ssh._transport
 
                 #p_transport.connect(username=proxy_username)
@@ -373,7 +377,7 @@ class SshConnection():
             verbose = self.verbose
         if verbose is True:
             if self.log is None:
-                print (str(msg))
+                print((str(msg)))
             else:
                 self.log.debug(msg)
 
@@ -428,6 +432,7 @@ class SshConnection():
             verbose=None,
             timeout=120,
             listformat=False,
+            escape_ansi_codes=True,
             enable_debug=False,
             cb=None, cbargs=[],
             invoke_shell=False,
@@ -484,6 +489,7 @@ class SshConnection():
         self.lastexitcode = SshConnection.cmd_not_executed_code
         start = time.time()
         status = None
+        chan = None
 
         def cmddebug(msg):
             if enable_debug:
@@ -560,7 +566,7 @@ class SshConnection():
                                 if enable_debug:
                                     cbname = 'unknown'
                                     try:
-                                        cbname = str(cb.im_func.func_code.co_name)
+                                        cbname = str(cb.__func__.__code__.co_name)
                                     except:
                                         pass
                                     self.debug('ssh cmd: sending new data to callback: ' +
@@ -644,6 +650,9 @@ class SshConnection():
             cmddebug('ssh cmd: channel closed')
             if output is None:
                 output = ""
+            if escape_ansi_codes:
+                ansi_esc = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+                output = ansi_esc.sub('', output.decode('utf-8'))
             if listformat:
                 # return output as list of lines
                 output = output.splitlines()
@@ -660,7 +669,7 @@ class SshConnection():
             ret['elapsed'] = int(time.time() - cmdstart)
             if verbose:
                 self.debug("done with exec")
-        except CommandTimeoutException, cte:
+        except CommandTimeoutException as cte:
             self.lastexitcode = SshConnection.cmd_timeout_err_code
             elapsed = str(int(time.time() - start))
             self.debug("Command (" + cmd + ") timeout exception after " + str(elapsed) +
@@ -680,7 +689,7 @@ class SshConnection():
                     transport.send_ignore()
                     return transport.isAlive() and transport.is_active()
             return False
-        except EOFError, e:
+        except EOFError as e:
             return False
 
     def refresh_connection(self):
@@ -749,7 +758,7 @@ class SshConnection():
         iplist = []
         ip = None
         key_files = key_files or self.key_files or []
-        if key_files and not isinstance(key_files, types.ListType):
+        if key_files and not isinstance(key_files, list):
             key_files = key_files.split(',')
         proxy_ip = None
         if not key_files and password is None and keypath is None and not self.find_keys:
@@ -833,7 +842,7 @@ class SshConnection():
                                     timeout=timeout, banner_timeout=banner_timeout)
                         connected = True
 
-                except paramiko.ssh_exception.SSHException, se:
+                except paramiko.ssh_exception.SSHException as se:
                     self.debug("Failed to connect to " + hostname + ", retry in 10 seconds. "
                                "Err:" + str(se))
                     time.sleep(10)
@@ -867,7 +876,7 @@ class SshConnection():
             length = len(password)-2
         else:
             length = len(password)
-        for x in xrange(length):
+        for x in range(length):
             show += '*'
         if len(password) > 3:
             show = password[0]+show
@@ -900,8 +909,8 @@ class SshConnection():
                 time.sleep(0.05)
                 try:
                     read_ready, wlist, xlist = select.select([fd, sys.stdin], [], [], timeout)
-                except select.error, se:
-                    print 'select error:' + str(se)
+                except select.error as se:
+                    print(('select error:' + str(se)))
                     break
                 if fd in read_ready:
                     try:
@@ -996,7 +1005,7 @@ class SshConnection():
                            is found) starting from 'start'.
         :returns : int representing the first available port
         """
-        for port in xrange(start, (start+checklimit)):
+        for port in range(start, (start+checklimit)):
             if self._can_connect_to_local_port(port, addr='127.0.0.1'):
                 return port
         raise ValueError('Could not find an available local port in range: {0} - {1}'
@@ -1009,6 +1018,7 @@ class SshConnection():
         :param port:
         :param addr:
         """
+        sock = None
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             result = sock.connect_ex((addr, port))
@@ -1029,7 +1039,7 @@ class SshConnection():
         :returns int
         """
         return int(abs(reduce(lambda x, y: x ^ y,
-                              [hash(item) for item in dict_to_hash.items()])))
+                              [hash(item) for item in list(dict_to_hash.items())])))
 
     def create_http_fwd_connection(self, destport, dest_addr='127.0.0.1', peer=None,
                                    localport=None, trans=None, httpaddr='127.0.0.1',
@@ -1060,7 +1070,7 @@ class SshConnection():
         local_arg_dict.update(connection_kwargs)
         connection_id = self._get_dict_id(local_arg_dict)
         # If there is an existing connection return it
-        if connection_id in self._http_connections.keys():
+        if connection_id in list(self._http_connections.keys()):
             http = self._http_connections[connection_id]
             if http.sock is not None:
                 return {'connection': self._http_connections[connection_id],

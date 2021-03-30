@@ -4,7 +4,7 @@ import copy
 import re
 import socket
 import sys
-import StringIO
+import io
 import time
 import traceback
 from datetime import timedelta
@@ -75,12 +75,12 @@ class Winrm_Connection:
             try:
                 self.shell_id = self.winproto.open_shell()
                 return self.shell_id
-            except WinRMTransportError, wte:
+            except WinRMTransportError as wte:
                 self.debug("Failed to open shell on attempt#:" + str(retry) + "/" + str(retries) +
                            ", err:" + str(wte))
                 if retry < retries:
                     time.sleep(5)
-            except Exception, e:
+            except Exception as e:
                 tb = self.get_traceback()
                 self.debug("Error caught while reseting winrm shell:" + str(e))
         self.debug(str(tb))
@@ -199,11 +199,11 @@ class Winrm_Connection:
         Returns a string buffer with traceback, to be used for debug/info purposes.
         '''
         try:
-            out = StringIO.StringIO()
+            out = io.StringIO()
             traceback.print_exception(*sys.exc_info(), file=out)
             out.seek(0)
             buf = out.read()
-        except Exception, e:
+        except Exception as e:
                 buf = "Could not get traceback"+str(e)
         return str(buf)
 

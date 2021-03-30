@@ -1,6 +1,6 @@
 from lab_utils.net_utils.sshconnection import SshConnection
 from lab_utils.log_utils import red, green, blue
-from lab_utils.log_utils.lablogger import Lablogger
+from lab_utils.log_utils.lablogger import LabLogger
 from lab_utils.log_utils import get_traceback, get_terminal_size
 import argparse
 import os
@@ -9,7 +9,7 @@ from socket import inet_aton
 import struct
 import time
 from threading import Thread, Lock
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from prettytable import PrettyTable
 
 class RemoteCommands(object):
@@ -63,9 +63,9 @@ class RemoteCommands(object):
         self.results = {}
         self.maxwait = .5
         self.ips = ips or self.args.ips or []
-        self.logger = Lablogger('RemoteCmds', stdout_level=self.log_level)
+        self.logger = LabLogger('RemoteCmds', stdout_level=self.log_level)
         if self.ips:
-            if isinstance(self.ips, basestring):
+            if isinstance(self.ips, str):
                 self.ips = str(self.ips).replace(',', ' ')
                 self.ips = self.ips.split()
             else:
@@ -94,7 +94,7 @@ class RemoteCommands(object):
                 start = time.time()
                 try:
                     self.logger.debug('Connecting to new host:' + str(host))
-                    logger = Lablogger(str(host))
+                    logger = LabLogger(str(host))
                     ssh = SshConnection(host=host, username=self.username, password=self.password,
                                         keypath=self.keypath, debug_connect=True,
                                         timeout=self.args.timeout, verbose=True, logger=logger)
@@ -170,7 +170,7 @@ class RemoteCommands(object):
                 time.sleep(.1 * len(ips))
                 for ip in ips:
                     with tlock:
-                        if ip not in self.results.keys():
+                        if ip not in list(self.results.keys()):
                             self.results[ip] = {
                                 'status': -1,
                                 'output': ['Timed out after {0} '
@@ -189,7 +189,7 @@ class RemoteCommands(object):
         output_hdr = "OUTPUT"
         pt = PrettyTable(['HOST', 'RES', 'TIME', output_hdr])
         host_w = 0
-        for host in results.keys():
+        for host in list(results.keys()):
             if len(host) > host_w:
                 host_w = len(host)
         res_w = 4
@@ -213,7 +213,7 @@ class RemoteCommands(object):
             output = ""
             for line in result.get('output'):
                 line.rstrip()
-                for x in xrange(0, len(line), max_width - 1):
+                for x in range(0, len(line), max_width - 1):
                     part = str('{output: <{length}}'.format(output=line[x:(x + max_width - 1)],
                                                             length=max_width))
                     output += part
@@ -230,7 +230,7 @@ class RemoteCommands(object):
         if printmethod:
             printmethod(buf)
         else:
-            print buf
+            print(buf)
 
 
 if __name__ == "__main__":

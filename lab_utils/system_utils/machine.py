@@ -19,7 +19,7 @@ from prettytable import PrettyTable
 from socket import error as socketerror
 import sys
 import tempfile
-from repoutils import Yum, Apt
+from .repoutils import Yum, Apt
 
 
 class Machine(object):
@@ -184,7 +184,7 @@ class Machine(object):
 
     def save_all_logs(self, path="logs"):
         """Save log buffers to a file"""
-        for log_file in self.log_buffers.keys():
+        for log_file in list(self.log_buffers.keys()):
             self.save_log(log_file, path)
 
     def dump_netfail_info(self, ip=None, mac=None, pass1=None, pass2=None, showpass=True,
@@ -253,7 +253,7 @@ class Machine(object):
             return str(pwd)
         if charcount is False:
             return "**hidden**"
-        for x in xrange(0, len(pwd)):
+        for x in range(0, len(pwd)):
             if (x == 0 or x == len(pwd)) and firstlast:
                 ret = ret + pwd[x]
             else:
@@ -285,13 +285,13 @@ class Machine(object):
                 self.distro  = self.sys('. /etc/os-release && echo "$ID"', code=0)
                 self.distro_ver = self.sys('. /etc/os-release && echo "$VERSION_ID"', code=0)
                 return (self.distro, self.distro_ver)
-            except CommandExitCodeException, CE:
+            except CommandExitCodeException as CE:
                 self.log.warning('Failed to fetch distro info from /etc/os-release, err:"{0}"'
                                  .format(CE))
 
         try:
             out = self.sys('cat /etc/issue', listformat=False, code=0, verbose=verbose)
-        except CommandExitCodeException, CE:
+        except CommandExitCodeException as CE:
             self.log.warning('Failed to fetch /etc/issue from machine:"{0}", err:"{1}"'
                            .format(self.hostname, str(CE)))
             out = None
@@ -299,7 +299,7 @@ class Machine(object):
             try:
                 self.distro = str(re.match("^\w+", out).group()).strip().lower()
                 self.distro_ver = str(re.search("\s(\d+[\d, .]*)\s", out).group()).strip().lower()
-            except Exception, DE:
+            except Exception as DE:
                 self.log.debug('Could not parse distro info from machine, err:' + str(DE))
         self.distro = self.distro or "UNKNOWN"
         self.distro_ver = self.distro_ver or "UNKNOWN"
@@ -356,7 +356,7 @@ class Machine(object):
                 # Check for a proxy
                 hostname = self.ssh_connect_kwargs.get('proxy', None) or hostname
                 port_status = False
-                for x in xrange(0, 3):
+                for x in range(0, 3):
                     try:
                         test_port_status(hostname, port=22, tcp=True, debug=self.log.debug)
                         port_status = True
@@ -582,8 +582,8 @@ class Machine(object):
                     sys.stdout.flush()
                     self.wget_last_status = val
                 else:
-                    print buf
-        except Exception, e:
+                    print(buf)
+        except Exception as e:
             pass
         finally:
             return ret
@@ -648,7 +648,7 @@ class Machine(object):
         except Exception as E:
             self.log.warning('Error fetching hostname from machine:"{0}"'.format(E))
         try:
-            ipv4_dict = self.get_network_ipv4_info(cache_interval=cache_interval).iteritems()
+            ipv4_dict = iter(self.get_network_ipv4_info(cache_interval=cache_interval).items())
             for iface, info in ipv4_dict:
                 ip = info.get('ip', None)
                 if ip:
@@ -716,7 +716,7 @@ class Machine(object):
         header = ['INTERFACE', 'CIDR', 'IP', 'MASK', 'BROADCAST', 'SCOPE']
         pt = PrettyTable(header)
         pt.align = 'l'
-        for iface, info in info_dict.iteritems():
+        for iface, info in info_dict.items():
             pt.add_row([iface, info['network_cidr'], info['ip'], info['mask'], info['broadcast'],
                         info['scope']])
         if not printme:
@@ -731,7 +731,7 @@ class Machine(object):
         out = None
         retry = 0
         orig_verbose = verbose
-        for retry in xrange(0, 5):
+        for retry in range(0, 5):
             if retry:
                 verbose = True
                 self.log.debug('Retry:{0}, attempting to fetch data from:"{1}"'
@@ -771,7 +771,7 @@ class Machine(object):
                 continue
             else:
                 interface = {}
-                for x in xrange(1, len(columns)):
+                for x in range(1, len(columns)):
                     interface[sections[x]] = columns[x].strip()
                 interfaces[iface_name] = interface
         return interfaces
@@ -780,7 +780,7 @@ class Machine(object):
                                      header_min=6, printmethod=None, printme=True):
         interfaces = interfaces or self.get_network_interfaces(search_name=search_name)
         headers = ['IFACE']
-        for value in interfaces.values()[0].keys():
+        for value in list(interfaces.values())[0].keys():
             header = (re.sub('TRANSMIT_', 'TX', re.sub('RECEIVE_', 'RX', value)).strip())
             headers.append(header)
         pt = PrettyTable(headers)
@@ -788,12 +788,12 @@ class Machine(object):
         pt.header = False
         pt.align = 'l'
         pt.padding_width = 0
-        for key, value in interfaces.iteritems():
-            pt.add_row([markup(key, [1, 94])] + value.values())
+        for key, value in interfaces.items():
+            pt.add_row([markup(key, [1, 94])] + list(value.values()))
         opt = pt._get_options({})
         pt._compute_widths(pt._format_rows(pt._rows, opt), opt)
         fake_header = []
-        for x in xrange(0, len(pt.field_names)):
+        for x in range(0, len(pt.field_names)):
             if pt._widths[x] > 1:
                 if pt._widths[x] > header_min:
                     limit = pt._widths[x]
@@ -820,7 +820,7 @@ class Machine(object):
             lasttime = last.get('timestamp')
             interfaces = last.get('interfaces')
             if search_name:
-                for key, value in interfaces.iteritems():
+                for key, value in interfaces.items():
                     if re.search(search_name, key):
                         old_interfaces[key] = value
             else:
@@ -830,18 +830,18 @@ class Machine(object):
         new_fetch = self.get_network_interfaces()
         self._net_iface_stats = {'timestamp': time.time(), 'interfaces': new_fetch}
         if search_name:
-            for key, value in new_fetch.iteritems():
+            for key, value in new_fetch.items():
                 if re.search(search_name, key):
                     new_interfaces[key] = value
             if not new_interfaces:
                 self.log.info('No interfaces found matching string: "{0}"'.format(search_name))
         else:
             new_interfaces = new_fetch
-        for iface_name, new_iface_dict in new_interfaces.iteritems():
+        for iface_name, new_iface_dict in new_interfaces.items():
             iface_delta_dict = {}
             if iface_name in old_interfaces:
                 old_dict = old_interfaces.get(iface_name)
-                for key, value in new_iface_dict.iteritems():
+                for key, value in new_iface_dict.items():
                     iface_delta_dict[key] = int(value) - int(old_dict.get(key, 0))
             else:
                 iface_delta_dict = new_iface_dict
@@ -948,7 +948,7 @@ class Machine(object):
             arch = self.sys('uname -p', code=0, verbose=verbose)[0]
             self._arch = arch
             return arch
-        except Exception, UE:
+        except Exception as UE:
             self.log.debug('Failed to get arch info from:"{0}", err:"{1}"'
                            .format(self.hostname, str(UE)))
         return None
@@ -1016,7 +1016,7 @@ class Machine(object):
         if disk:
             sys_pt.add_row([markup("DISK:", [1, 4]), "", ""])
             disk_info = self.get_disk_summary()
-            for fs, info in disk_info.iteritems():
+            for fs, info in disk_info.items():
                 sys_pt.add_row([os.path.basename(fs) + " ", info.get('size'), info.get('use%')])
         if print_table:
             print_method("\n{0}\n".format(sys_pt))
@@ -1081,7 +1081,7 @@ class Machine(object):
             return True
         except CommandExitCodeException:
             return False
-        except Exception, e:
+        except Exception as e:
             self.log.debug('Could not get "{0}" service state from machine: {1}, err:{2}'
                            .format(service, self.hostname, str(e)))
 
@@ -1114,7 +1114,7 @@ class Machine(object):
 
             split_time = time_string.split(':')
             # insert a 0 if hours, and minutes are not present.
-            for x in xrange(len(split_time), 3):
+            for x in range(len(split_time), 3):
                 split_time.insert(0, 0)
 
             hours = int(split_time[0] or 0)
@@ -1122,7 +1122,7 @@ class Machine(object):
             seconds = int(split_time[2] or 0)
             elapsed = seconds + (minutes * seconds_min) + (hours * seconds_hour) + (
                 days * seconds_day)
-        except Exception, ES:
+        except Exception as ES:
             self.log.debug('{0}\n"get_elapsed_seconds_since_pid_started" error: "{1}"'
                            .format(get_traceback(), str(ES)))
         return int(elapsed)
@@ -1179,11 +1179,11 @@ class Machine(object):
                 users = str(self.sys("cat /etc/passwd | grep -v nologin | awk -F: '{ if ( $3 >= " +
                                      str(uid_min) + " && $3 <= " + str(uid_max) +
                                      " ) print $0}' ")[0]).split(":")[0]
-            except IndexError, ie:
+            except IndexError as ie:
                 self.log.debug("No access found, passing exception:" + str(ie))
                 pass
             return users
-        except Exception, e:
+        except Exception as e:
             self.log.debug("Failed to get local access. Err:" + str(e))
 
     def get_user_password(self, username):
@@ -1221,7 +1221,7 @@ class Machine(object):
                 # return list starting at group index
                 groups = groups[index:len(groups)]
             return groups
-        except Exception, e:
+        except Exception as e:
             self.log.debug("No group found for user:" + str(username) + ", err:" + str(e))
 
     ###############################################################################################
@@ -1397,7 +1397,7 @@ class Machine(object):
             # Execute dd command and store echo'd pid from output
             try:
                 dd_pid = self.sys(cmd, code=0)[0]
-            except CommandExitCodeException, se:
+            except CommandExitCodeException as se:
                 dbg_buf = ""
                 file_contents = self.sys('cat ' + str(tmpfile))
                 if file_contents:
@@ -1479,7 +1479,7 @@ class Machine(object):
                             ret['dd_elapsed'] = float(summary[5])
                             ret['dd_rate'] = float(summary[7])
                             ret['dd_units'] = str(summary[8])
-                    except Exception, e:
+                    except Exception as e:
                         # catch any exception in the data parsing and show it as info/debug later
                         tb = get_traceback()
                         infobuf = '\n\nCaught exception while processing line:"' + str(line) + '"'
@@ -1517,7 +1517,7 @@ class Machine(object):
                     elapsed = int(time.time() - start)
             # if we have any info from exceptions caught during parsing, print that here...
             if infobuf:
-                print infobuf
+                print(infobuf)
             # format last output for debug in case of errors
             if out:
                 outbuf = "\n".join(out)

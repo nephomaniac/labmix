@@ -38,7 +38,7 @@ def test_port_status(ip,
         if verbose:
             if not debug:
                 def debug(msg):
-                    print str(msg)
+                    print(({0}.format(msg)))
         else:
             def debug(msg):
                 pass
@@ -61,7 +61,7 @@ def test_port_status(ip,
                 s.sendto(send_buf, (ip, port))
             if recv_size:
                 ret_buf = s.recv(recv_size)
-        except socket.error, se:
+        except socket.error as se:
             debug('test_port_status failed socket error:' + str(se[0]))
             # handle specific errors here, for now just for debug...
             ecode = se[0]
@@ -72,7 +72,7 @@ def test_port_status(ip,
             if ecode == socket.errno.ETIMEDOUT or ecode == "timed out":
                 debug("test_port_status: Connect to " + str(ip) + ":" + str(port) + " timed out")
             raise se
-        except socket.timeout, st:
+        except socket.timeout as st:
             debug('test_port_status failed socket timeout')
             raise st
         finally:
@@ -94,13 +94,13 @@ def scan_port_range(ip, start, stop, timeout=1, tcp=True):
     :return list of ports which did not fault (connected) during scan
     '''
     ret = []
-    for x in xrange(start, stop+1):
+    for x in range(start, stop+1):
         try:
             sys.stdout.write("\r\x1b[K"+str('scanning:'+str(x)))
             sys.stdout.flush()
             test_port_status(ip, x, timeout=timeout, tcp=tcp, verbose=False)
             ret.append(x)
-        except socket.error, se:
+        except socket.error as se:
             pass
     return ret
 
@@ -119,16 +119,16 @@ def ping(address, poll_count=10, interval=2, logger=None):
             debug = logger.debug
         else:
             def debug(msg):
-                print str(msg)
+                print(({0}.format(msg)))
 
             def critical(msg):
-                print sys.stderr, str(msg)
+                sys.stderr.write({0}.format(msg))
 
         if re.search("0.0.0.0", address):
             critical("Address is all 0s and will not be able to ping it")
             return False
         debug("Attempting to ping " + address)
-        for x in xrange(0, poll_count):
+        for x in range(0, poll_count):
             if x:
                 debug('sleeping for {0} seconds'.format(interval))
                 time.sleep(interval)
@@ -184,7 +184,7 @@ def get_network_info_for_cidr(network_cidr):
     ret['broadcast'] = list(ret['network'])
     for i in range(32 - cidr):
         ret['broadcast'][3 - i / 8] = ret['broadcast'][3 - i / 8] + (1 << (i % 8))
-    for key, value in ret.iteritems():
+    for key, value in ret.items():
         if isinstance(value, list):
             ret[key] = ".".join(str(x) for x in value)
     return ret
@@ -367,7 +367,7 @@ def packet_test(sender_ssh, receiver_ssh, protocol, dest_ip=None, src_addrs=None
     if not isinstance(rx.result, dict):
         errmsg = ""
         if tx.error:
-            errmsg = "ERROR ON SENDER:{1}\n".format(tx.error)
+            errmsg = "ERROR ON SENDER:{0}\n".format(tx.error)
         errmsg += 'Failed to read in results dict from remote receiver, output: {0}'\
             .format(rx.result)
         raise RuntimeError(errmsg)

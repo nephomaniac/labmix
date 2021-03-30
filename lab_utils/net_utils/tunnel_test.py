@@ -1,7 +1,7 @@
 import urllib3
 import paramiko
 from pprint import pprint
-from httplib import HTTPConnection
+from http.client import HTTPConnection
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -29,12 +29,12 @@ class TunnelHTTPConnectionPool(urllib3.HTTPConnectionPool):
     def _new_conn(self):
         def monkey_connect():
             self = conn
-            print "ch = trans.open_channel('direct-tcpip', ({0}, {1}), ('10.111.5.156', 7337))"\
-                .format(self.host, self.port)
+            print(("ch = trans.open_channel('direct-tcpip', ({0}, {1}), ('10.111.5.156', 7337))"\
+                .format(self.host, self.port)))
             self.sock = ssh_client.get_transport().open_channel(
                     "direct-tcpip", (self.host, self.port), ("10.111.5.156", 7337))
 
-        print 'http = HTTPconnection(host={0}, port={1})'.format(self.host, self.port)
+        print(('http = HTTPconnection(host={0}, port={1})'.format(self.host, self.port)))
         conn = HTTPConnection(host=self.host, port=self.port)
         conn.connect = monkey_connect
         return conn
@@ -46,9 +46,9 @@ ssh_client.connect(hostname='10.111.5.156', username='root', password='foobar')
 
 http = TunnelingPoolManager(ssh_client=ssh_client)
 for x in range(2):
-    print "\nMaking request....\n\n"
+    print("\nMaking request....\n\n")
     r = http.request('GET', 'http://127.0.0.1:8080/midonet-api/routers/')
-    print "\nDone with request now print output...\n\n"
-    print r.status
-    pprint(r.headers)
-    print r.data
+    print("\nDone with request now print output...\n\n")
+    print(({0}.format(r.status)))
+    pprint({0}.format(r.headers))
+    print(({0}.format(r.data)))

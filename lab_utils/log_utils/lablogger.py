@@ -54,20 +54,20 @@ class LabLogger(logging.Logger):
         """
         # Debug for init...
         if show_init:
-            print ('-----------------------------------------------\n'
+            print(('-----------------------------------------------\n'
                    'parent_logger_name:{0}\nlablogger init:\nidentifier:{1}\nstdout_level:{2}\n'
                    'stdout_format:{3}\nlogfile:{4}\nlogfile_level:{5}\nfile_format:{6}\n'
                    '\n-----------------------------------------------'
                    .format(parent_logger_name, identifier, stdout_level, stdout_format, logfile,
-                           logfile_level, file_format))
+                           logfile_level, file_format)))
         # Create or fetch existing logger of name 'logger_name
-        if isinstance(stdout_level, basestring):
+        if isinstance(stdout_level, str):
             self.stdout_level = getattr(logging, stdout_level.upper(), logging.DEBUG)
         elif isinstance(stdout_level, int):
             self.stdout_level = stdout_level
         else:
             self.stdout_level = logging.DEBUG
-        if isinstance(logfile_level, basestring):
+        if isinstance(logfile_level, str):
             self.logfile_level = getattr(logging, logfile_level.upper(), logging.DEBUG)
         else:
             self.logfile_level = logfile_level or logging.DEBUG
@@ -133,7 +133,7 @@ class LabLogger(logging.Logger):
         return files
 
     def set_stdout_loglevel(self, level):
-        if not isinstance(level, int) and isinstance(level, basestring):
+        if not isinstance(level, int) and isinstance(level, str):
             level = getattr(logging, level.upper())
         self.setLevel(level)
         for handler in self.handlers:
@@ -161,7 +161,7 @@ class LabLogger(logging.Logger):
 
     @classmethod
     def format_log_level(self, level, default=logging.DEBUG):
-        if isinstance(level, basestring):
+        if isinstance(level, str):
             return getattr(logging, level.upper(), default)
         if isinstance(level, int):
             return level

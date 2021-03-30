@@ -50,10 +50,10 @@ def setup_mcast_port_listener(mcast_grp, mcast_port, is_mac=False):
 
 def listen_on_port(sock, count=None, verbose=False):
     while True:
-        print >> sys.stderr, '\nwaiting to receive message'
+        print('\nwaiting to receive message', file=sys.stderr)
         data, address = sock.recvfrom(1024)
 
-        print >> sys.stderr, 'received %s bytes from %s' % (len(data), address)
+        print('received %s bytes from %s' % (len(data), address), file=sys.stderr)
         #    print >>sys.stderr, data
 
 
