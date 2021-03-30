@@ -1,0 +1,38 @@
+{"Mode": "VPCMIDO",
+  "PublicIps": [
+    "10.116.208.10-10.116.208.254",
+    "10.117.208.10-10.117.208.254",
+    "10.100.100.10-10.100.100.254"
+  ],
+  "InstanceDnsServers": [
+    "10.111.5.14",
+    "10.111.5.15"
+  ],
+  "Mido": {
+    "BgpAsn": "65798",
+    "Gateways": [
+      {
+        "Ip": "10.111.5.11",
+        "ExternalDevice": "em1.116",
+        "ExternalCidr": "10.116.128.0/17",
+        "ExternalIp": "10.116.133.11",
+        "BgpPeerIp": "10.116.133.173",
+        "BgpPeerAsn": "65000",
+        "BgpAdRoutes": [
+          "10.116.208.0/24"
+        ]
+      },
+      {
+        "Ip": "10.111.5.12",
+        "ExternalDevice": "em1.117",
+        "ExternalCidr": "10.117.0.0/16",
+        "ExternalIp": "10.117.5.12",
+        "BgpPeerIp": "10.117.1.133",
+        "BgpPeerAsn": "65000",
+        "BgpAdRoutes": [
+          "10.117.208.0/24"
+        ]
+      }
+    ]
+  }
+}
