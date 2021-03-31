@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from lab_utils.net_utils.sshconnection import SshConnection
 from lab_utils.log_utils import red, green, blue
 from lab_utils.log_utils.lablogger import LabLogger
