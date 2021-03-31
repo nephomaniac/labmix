@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# Intended to show examples of the SshConnection Class
+# Usage ./ssh_examples.py -i 172.20.4.123 -p pass123
+
+
 # import the SshConnection and LabLogger classes...
 from lab_utils.net_utils.sshconnection import SshConnection
 from lab_utils.log_utils.lablogger import LabLogger
