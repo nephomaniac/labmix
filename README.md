@@ -10,14 +10,26 @@
  python setup.py install
  pip install ipython
 ```
-## Test the install with ipython
 ## Note: If missing modules/imports fail. Check python versions and paths to make sure things are lined up 
+Example of python executables and paths not lining up everywhere notice 3.8 vs 3.9...
 ```
+(lab_venv) mattclark@Matts-MacBook-Pro:~/python_workspace/labmix$ python
+Python 3.9.2 (v3.9.2:1a79785e3e, Feb 19 2021, 09:06:10) 
+[Clang 6.0 (clang-600.0.57)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+
 (lab_venv) mclark@ace: [labmix… main|✚1…49] # ipython
 Python 3.8.5 (default, Jan 27 2021, 15:41:15) 
 Type 'copyright', 'credits' or 'license' for more information
 IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
+(lab_venv) mattclark@Matts-MacBook-Pro:~/python_workspace/labmix$ which python
+/Users/mattclark/python_workspace/labmix/lab_venv/bin/python
+
+(lab_venv) mattclark@Matts-MacBook-Pro:~/python_workspace/labmix$ which ipython
+/Users/mattclark/python_workspace/labmix/lab_venv/bin/ipython
 ```
+
+## Test the install with ipython
 ### Use tab complete to see options within the libs
 ```
 In [1]: from lab_utils.<tab tab>
