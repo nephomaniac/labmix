@@ -3,12 +3,15 @@
  sudo apt install python3-pip
  sudo apt-get install python3-venv
 
- python3 -m venv lab_venv
+ git clone git@bitbucket.org:smartrg/labmix.git
+ cd labmix
+ python3 -m venv lab_venv 
  source lab_venv/bin/activate
- pip install ipython
  python setup.py install
+ pip install ipython
 ```
-### Test the install with ipython
+## Test the install with ipython
+## Note: If missing modules/imports fail. Check python versions and paths to make sure things are lined up 
 ```
 (lab_venv) mclark@ace: [labmix… main|✚1…49] # ipython
 Python 3.8.5 (default, Jan 27 2021, 15:41:15) 
