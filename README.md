@@ -1,4 +1,5 @@
 ### INSTALL 
+```
  sudo apt install python3-pip
  sudo apt-get install python3-venv
  pip3 install ipython
@@ -6,28 +7,32 @@
  python3 -m venv lab_venv
  source lab_venv/bin/activate
  python3 setup.py install
-
+```
 ### Test the install with ipython
+```
 (lab_venv) mclark@ace: [labmix… main|✚1…49] # ipython
 Python 3.8.5 (default, Jan 27 2021, 15:41:15) 
 Type 'copyright', 'credits' or 'license' for more information
 IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
-
+```
 ### Use tab complete to see options within the libs
+```
 In [1]: from lab_utils.<tab tab>
                         file_utils   net_utils   
                         log_utils    system_utils
-
-In [2]: cpe = SshConnection('10.30.0.10', password='pass123')
+```
 
 ### Use tab complete to see options within an obj...
+```
+In [2]: cpe = SshConnection('10.30.0.10', password='pass123')
 In [3]: cpe.<tab tab>
   banner_timeout               cmd_not_executed_code        debug()                      get_proxy_transport()         
   close()                      cmd_timeout_err_code         debug_connect                get_ssh_connection()          
   close_sftp()                 connection                   enable_ipv6_dns              host                         >
   cmd()                        create_http_fwd_connection() find_keys                    http_fwd_request()            
-
+```
 ### Use '?' to get additional info on a function or method...
+```
  In [3]: cpe.cmd?
 
     ['status'] - The exitcode of the command. Note in the case a call back fires, this
@@ -64,6 +69,6 @@ Arguments:
                      and re-establish it if not before attempting to send the command.
 File:      ~/python_stuff/labmix/lab_utils/net_utils/sshconnection.py
 Type:      method
-
+```
 
 ### see Examples dir for additional usage examples. 
