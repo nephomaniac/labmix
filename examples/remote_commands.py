@@ -14,7 +14,7 @@ from prettytable import PrettyTable
 
 class RemoteCommands(object):
     """
-    Utility to run commands on remote machines via ssh in batches.
+    Utility to run commands on groups of remote machines via ssh in batches.
     """
     
     def __init__(self, hostfile=None, ips=None, password=None, keypath=None, username='root',

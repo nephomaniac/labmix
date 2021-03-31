@@ -74,9 +74,9 @@ import sys
 from functools import reduce
 from scp import SCPClient, SCPException
 try:
-    from urlparse import urlparse
-except:
     from urllib.parse import urlparse
+except:
+    from urlparse import urlparse
 import termios
 import tty
 
@@ -948,9 +948,9 @@ class SshConnection():
     @property
     def scp(self):
         if self._scp:
-            return self._scp
-        else:
-            self._scp = SCPClient(self.connection.get_transport())
+            if self._scp.transport and self._scp.transport.active:
+                return self._scp
+        self._scp = SCPClient(self.connection.get_transport())
         return self._scp
 
     @property
@@ -958,8 +958,7 @@ class SshConnection():
         if self._sftp:
             if self._sftp.sock and not self._sftp.sock.closed:
                 return self._sftp
-        else:
-            self._sftp = self.open_sftp()
+        self._sftp = self.open_sftp()
         return self._sftp
 
     @sftp.setter
