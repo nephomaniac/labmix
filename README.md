@@ -62,8 +62,17 @@ Out[2]:
  '/home/mclark/.ipython']
  ```
 
+If you path is incorrect, you can try to rm -rf your venv and start the steps above over by recreateing a venv. 
+...and/or...
+Try adjust the path in the venv/bin/activate bash script...
+```
+#store the old path
+OLD_PYTHONPATH="$PYTHONPATH
+export PYTHONPATH="</fullpath/my_venv/lib/pythonXYZ/site...>,$PYTHONPATH"
 
-
+#in the deactivate()function restore your old path...
+[ -n $OLD_PYTHONPATH ] && export export PYTHONPATH="$OLD_PYTHONPATH
+```
 
 
 
