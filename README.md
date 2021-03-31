@@ -28,6 +28,44 @@ IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
 (lab_venv) mattclark@Matts-MacBook-Pro:~/python_workspace/labmix$ which ipython
 /Users/mattclark/python_workspace/labmix/lab_venv/bin/ipython
 ```
+Make sure your python and ipython executable are running from the same 'python' as your
+venv. Make sure the paths are using your venv libs/ dir... 
+
+Example where my venv is 'lab_venv'...
+(lab_venv) mclark@ace: [lab_venv… main ↓·10|…50] # ls lib/python3.8/site-packages
+
+/home/mclark/python_stuff/labmix/lab_venv/lib/python3.8/site-package
+
+
+Now check sys.path from python and then ipython. Example...
+```
+(lab_venv) mclark@ace: [lab_venv… main ↓·10|…50] # which ipython
+/home/mclark/python_stuff/labmix/lab_venv/bin/ipython
+(lab_venv) mclark@ace: [lab_venv… main ↓·10|…50] # ipython
+Python 3.8.5 (default, Jan 27 2021, 15:41:15) 
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: import sys
+
+In [2]: sys.path
+Out[2]: 
+['/home/mclark/python_stuff/labmix/lab_venv/bin',
+ '/usr/lib/python38.zip',
+ '/usr/lib/python3.8',
+ '/usr/lib/python3.8/lib-dynload',
+ '',
+ '/home/mclark/python_stuff/labmix/lab_venv/lib/python3.8/site-packages',
+ '/home/mclark/python_stuff/labmix/lab_venv/lib/python3.8/site-packages/labmix-1.0.0-py3.8.egg',
+ ...
+ ...
+ '/home/mclark/.ipython']
+ ```
+
+
+
+
+
 
 ## Test the install with ipython
 ### Use tab complete to see options within the libs
