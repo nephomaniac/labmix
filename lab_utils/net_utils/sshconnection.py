@@ -639,7 +639,7 @@ class SshConnection():
                                 if verbose:
                                     # Dont print line by line output if cb is used,
                                     # let cb handle that
-                                    newdebug += new
+                                    newdebug += str(new)
                         else:
                             status = self.lastexitcode = chan.recv_exit_status()
                             chan.close()

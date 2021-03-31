@@ -28,14 +28,14 @@ hubuser = args.user
 
 
 #Create a logging instance...
-log = LabLogger('SSH_EXAMPLE')
+log = LabLogger('EXAMPLE_SCRIPT')
 
 
 
 # Create ssh connection objects...
 # Example ssh to an RG's WAN addr...
 log.debug('Creating an ssh session to my hub:{0}'.format(hubip))
-hub = SshConnection(hubip, password=hubpass, username=hubuser)
+hub = SshConnection(hubip, password=hubpass, username=hubuser, verbose=True)
 
 # Run a command to get the mac
 hub.mac = hub.sys('uci get network.wan.macaddr')[0]
@@ -56,7 +56,7 @@ sats = []
 for sat_addr in all_sat_addrs:
     log.debug('Creating ssh connection to sat:{0}'.format(sat_addr))
     # Assume the sats use the same password as the hub here...
-    new_sat = SshConnection(sat_addr, password=hub.password, proxy=hub.host, proxy_password=hub.password)
+    new_sat = SshConnection(sat_addr, password=hub.password, proxy=hub.host, proxy_password=hub.password, verbose=True)
     # Run a command on one of the SATs to get it's mac
     new_sat.mac = new_sat.sys('uci get network.wan.macaddr')[0]
     # '3C:90:66:F8:BE:80'
@@ -68,17 +68,21 @@ fake_img_name = 'smartos_fake.img'
 hub.scp.get(remote_path='/etc/hosts/', local_path=fake_img_name)
 
 # Upload software to all the sats (this is better done with threads/sub processes, see remote_commands.py example)
-# Do a fake upgrade...
 rg_path = '/tmp/{0}'.format(fake_img_name)
+rgs = sats
+rgs.append(hub)
 try:
-    for sat in sats:
-        sat.scp.put(fake_img_name, rg_path)
-    for sat in sats:
-        out = sat.sys('echo "I could be upgrading to this {0}"'.format(rg_path), code=0)
-        log.debug('Upgrade succeeded with output:{0}'.format("\n".join(out)))
-        #sat.sys('sysupgrade {0}'.format(rg_path), code=0)
+    for rg in rgs:
+        rg.scp.put(fake_img_name, rg_path)
+    for rg in rgs:
+        # Run a command with verbose to show per IP logging...
+        out = rg.sys('echo "Hello from {0}"; ls {1}'.format(rg.mac, rg_path), code=0, verbose=1)
+        # Fake fail the next time around...
+        log.debug('Command on host:{0} succeeded with output:\n{1}\n'.format(rg.host, "\n".join(out)))
+        rg_path += "_bad_file"
+        log.warning('Setting up the next one to fail...!')
 except Exception as E:
-    log.critical('Failed to upgrade sat:{0}:{1}, err:{2}'.format(sat.host, sat.mac, E))
+    log.critical('Command failed on rg:{0}:{1},\n err:{2}'.format(rg.host, rg.mac, E))
     raise E
 
 
