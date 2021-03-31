@@ -42,7 +42,8 @@ hub.mac = hub.sys('uci get network.wan.macaddr')[0]
 # '00:23:6A:C0:5C:30'
 log.debug('Got the hubs mac:{0}'.format(hub.mac))
 
-# Run a remote command to the addresses of all the SATs...
+
+# Run a remote command to discover all the addresses of the SATs behind this HUB...
 all_sat_addrs = hub.sys("cat /tmp/mesh/topology.json | jq -r '.Hosts | map(select(.Role == \"SAT\")) | .[0].Address'", code=0)
 # By default the sys(listformat=True) so lines are returned in an array. If a raw buffer is returned you may need
 # to trim return/newline chars. etc
