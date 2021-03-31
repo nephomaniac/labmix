@@ -4,18 +4,23 @@
 from lab_utils.net_utils.sshconnection import SshConnection
 from lab_utils.log_utils.lablogger import LabLogger
 import argparse
+
 #Get some cli args first...
 parser = argparse.ArgumentParser(
     description='Sample to show ssh usage...',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 # Set a default hub addr, this can be the WAN or LAN addr
-hubip='192.168.1.1'
-parser.add_argument('-i', '--hubip', default=hubip,
-                        help='Provide the wan or lan IP of the hub to connect to')
+parser.add_argument('-i','--hubip', default=None, 
+        help='Provide the wan or lan IP of the hub to connect to', required=True)
+parser.add_argument('-p','--password', default=None, help='Provide hub ssh password', required=True)
+parser.add_argument('-u','--user', default='root', help='Provide ssh username')
+
 
 args = parser.parse_args()
-hubip = args.hub_ip or hubip
+hubip = args.hubip 
+hubpass = args.password
+hubuser = args.user
 
 
 #Create a logging instance...
@@ -26,7 +31,7 @@ log = LabLogger('SSH_EXAMPLE')
 # Create ssh connection objects...
 # Example ssh to an RG's WAN addr...
 log.debug('Creating an ssh session to my hub:{0}'.format(hubip))
-hub = SshConnection(hubip, password='hub_pass')
+hub = SshConnection(hubip, password=hubpass, username=hubuser)
 
 # Run a command to get the mac
 hub.mac = hub.sys('uci get network.wan.macaddr')[0]
@@ -45,23 +50,24 @@ log.debug('Got Sats:{0}'.format(",".join(all_sat_addrs)))
 sats = []
 for sat_addr in all_sat_addrs:
     log.debug('Creating ssh connection to sat:{0}'.format(sat_addr))
-    new_sat = SshConnection(sat_addr, password='sat_pass', proxy=hub.host, proxy_password=hub.password)
+    # Assume the sats use the same password as the hub here...
+    new_sat = SshConnection(sat_addr, password=hub.password, proxy=hub.host, proxy_password=hub.password)
     # Run a command on one of the SATs to get it's mac
     new_sat.mac = new_sat.sys('uci get network.wan.macaddr')[0]
     # '3C:90:66:F8:BE:80'
     sats.append(new_sat)
 
 
-img = 'smartos.img'
+fake_img_name = 'smartos_fake.img'
 # Download a file (ie /etc/hosts) from the hub, rename it to pretend it's a firmware image..
-hub.scp.get('/etc/hosts', img)
+hub.scp.get(remote_path='/etc/hosts/', local_path=fake_img_name)
 
 # Upload software to all the sats (this is better done with threads/sub processes, see remote_commands.py example)
 # Do a fake upgrade...
-rg_path = 'tmp/{0}'.format(img)
+rg_path = '/tmp/{0}'.format(fake_img_name)
 try:
     for sat in sats:
-        sat.scp.put(img, rg_path)
+        sat.scp.put(fake_img_name, rg_path)
     for sat in sats:
         out = sat.sys('echo "I could be upgrading to this {0}"'.format(rg_path), code=0)
         log.debug('Upgrade succeeded with output:{0}'.format("\n".join(out)))
