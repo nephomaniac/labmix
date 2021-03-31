@@ -6,6 +6,8 @@
 
  python3 -m venv lab_venv
  source lab_venv/bin/activate
+ cd Lab_venv
+ git clone git@bitbucket.org:smartrg/labmix.git
  python3 setup.py install
 ```
 ### Test the install with ipython
