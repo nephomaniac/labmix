@@ -5,6 +5,7 @@ from lab_utils.log_utils import get_traceback, get_terminal_size
 import argparse
 import os
 import re
+import sys
 from socket import inet_aton
 import struct
 import time
@@ -74,8 +75,10 @@ class RemoteCommands(object):
             with open(os.path.expanduser(self.args.hostfile)) as f:
                 self.ips.extend(f.readlines())
         if not self.ips:
-            raise ValueError('No hosts provided. Use --hostfile or --ips to provide hosts to run '
-                             'command against')
+            sys.stderr.write('No hosts provided. Use --hostfile or --ips to provide hosts to run '
+                             'command against\n')
+            self.parser.print_usage()
+            sys.exit(1)
 
     def do_ssh(self, q, lock, name, command):
         empty = False

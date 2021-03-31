@@ -4,7 +4,7 @@ import copy
 import re
 import socket
 import sys
-import io
+from io import StringIO
 import time
 import traceback
 from datetime import timedelta
@@ -199,7 +199,7 @@ class Winrm_Connection:
         Returns a string buffer with traceback, to be used for debug/info purposes.
         '''
         try:
-            out = io.StringIO()
+            out = StringIO()
             traceback.print_exception(*sys.exc_info(), file=out)
             out.seek(0)
             buf = out.read()

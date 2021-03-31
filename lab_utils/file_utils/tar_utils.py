@@ -64,7 +64,7 @@ import re
 import time
 import tarfile
 import urllib.request, urllib.error, urllib.parse
-import io
+from io import StringIO
 import errno
 
 
@@ -411,7 +411,7 @@ class Http_Tarutils(Tarutils):
             destfile = self.make_path(destfile)
             dfile = open(destfile, 'w+')
         else:
-            dfile = io.StringIO()
+            dfile = StringIO()
         # form our http request
         request = urllib.request.Request(url)
         request.headers['Range'] = 'bytes=%s-%s' % (start, end)

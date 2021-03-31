@@ -693,7 +693,7 @@ class SshConnection():
                 transport = self.connection.get_transport()
                 if transport:
                     transport.send_ignore()
-                    return transport.isAlive() and transport.is_active()
+                    return transport.is_alive() and transport.is_active()
             return False
         except EOFError as e:
             return False

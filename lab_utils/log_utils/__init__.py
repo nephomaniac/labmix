@@ -237,7 +237,7 @@ def get_traceback():
         Returns a string buffer with traceback, to be used for debug/info purposes.
         '''
         try:
-            out = StringIO.StringIO()
+            out = StringIO()
             traceback.print_exception(*sys.exc_info(), file=out)
             out.seek(0)
             buf = out.read()

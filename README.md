@@ -2,11 +2,11 @@
 ```
  sudo apt install python3-pip
  sudo apt-get install python3-venv
- pip3 install ipython
 
  python3 -m venv lab_venv
  source lab_venv/bin/activate
- python3 setup.py install
+ pip install ipython
+ python setup.py install
 ```
 ### Test the install with ipython
 ```
