@@ -1,3 +1,5 @@
+![Scheme](icon.jpg)
+
 ### INSTALL 
 ```
 See the 'install_helper.sh script for installing these libs and environment. 
