@@ -307,6 +307,9 @@ class CliTestRunner(object):
     # as well as help test authors from having to re-add/create these per test.
     #####################################################################################
     _DEFAULT_CLI_ARGS = {
+        'username': {'args': ['--ssh-user'],
+                      'kwargs': {"help": "ssh  user name to use with the gateway cpe",
+                                 "default": "root"}},
         'password': {'args': ["--password"],
                      'kwargs': {"help": "Password to use for machine root ssh access",
                                 "default": None}},
@@ -319,9 +322,6 @@ class CliTestRunner(object):
         'log_level': {'args': ["--log-level"],
                       'kwargs': {"help": "log level for stdout logging",
                                  "default": 'DEBUG'}},
-        'username': {'args': ['--ssh-user'],
-                      'kwargs': {"help": "ssh  user name to use with the gateway cpe",
-                                 "default": "root"}},
         'log_file': {'args': ['--log-file'],
                      'kwargs': {"help": "file path to log to (in addition to stdout",
                                 "default": None}},
