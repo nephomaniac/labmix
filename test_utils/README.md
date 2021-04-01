@@ -285,7 +285,8 @@ To run from the cli:
 ./example_test.py --gw-cpe '192.168.1.1' --password 'n****' --ping-addr '192.168.69.222'
 
 
-## Use Ipython to tab complete and '?' attributes and class methods of a cli_test_runner object...
+## Use ipython or python shells to tab complete and '?' attributes and class methods of a cli_test_runner object...
+
 ```
 (labmix_venv) mclark@delldude: [labmix… main|…47] # ipython
 Python 3.8.5 (default, Jan 27 2021, 15:41:15) 
@@ -328,4 +329,4 @@ In [3]: blanktest.
                     args                                create_testunit_from_method()       dump_test_info_yaml()               format_testunit_method_arg_values() get_meth_arg_names()                 
                     clean_method()                      do_with_args()                      endfailure()                        get_arg()                           get_method_fcode()                  >
                     config_file                         dump_test_info_json()               endnotrun()                         get_args()                          get_pretty_args()            
-                    ```
+```
