@@ -3,7 +3,7 @@
 See the 'install_helper.sh script for installing these libs and environment. 
 ```
 ### Validating an installation
-Try running the test.py script to do a basic validation that he libs, and virtual env has been 
+Try running the test.py script to do a basic validation that the libs, and virtual env have been 
 installed correctly...
 
 source <virt env name>/bin/activate
