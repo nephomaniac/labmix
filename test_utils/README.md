@@ -1,4 +1,4 @@
-## Getting to know the testcase class...
+## Getting to know the cli_test_runner testcase classes...
 Example using ipython (python CLI/shell):
 
 # Output from the console...
@@ -283,3 +283,49 @@ optional arguments:
 
 To run from the cli:
 ./example_test.py --gw-cpe '192.168.1.1' --password 'n****' --ping-addr '192.168.69.222'
+
+
+## Use Ipython to tab complete and '?' attributes and class methods of a cli_test_runner object...
+```
+(labmix_venv) mclark@delldude: [labmix… main|…47] # ipython
+Python 3.8.5 (default, Jan 27 2021, 15:41:15) 
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: from test_utils.cli_test_runner import CliTestRunner
+
+In [2]: blanktest = CliTestRunner()
+[04-01 08:14:10][INFO][CliTestRunner]: 
+            TEST CASE INFO            
+ +------------------+---------------+ 
+ | NAME             | CliTestRunner | 
+ | TEST LIST        | []            | 
+ | ENVIRONMENT FILE | None          | 
+ +------------------+---------------+ 
+
+[04-01 08:14:10][INFO][CliTestRunner]: 
++------------------+-----------------------------+
+| TEST ARGS        | VALUE                       |
++------------------+-----------------------------+
+| configsections   | ['CliTestRunner', 'global'] |
+| cpe_type         | smartos                     |
+| dry_run          | False                       |
+| environment_file | None                        |
+| gw_cpe           | None                        |
+| log_file         | None                        |
+| log_file_level   | DEBUG                       |
+| log_level        | DEBUG                       |
+| no_clean         | False                       |
+| password         | None                        |
+| ssh_user         | admin                       |
+| test_list        | None                        |
+| test_regex       | None                        |
++------------------+-----------------------------+
+
+
+In [3]: blanktest.
+                    add_arg()                           create_testunit_by_name()           dump_test_info_labtest()            endsuccess()                        get_default_userhome_config()        
+                    args                                create_testunit_from_method()       dump_test_info_yaml()               format_testunit_method_arg_values() get_meth_arg_names()                 
+                    clean_method()                      do_with_args()                      endfailure()                        get_arg()                           get_method_fcode()                  >
+                    config_file                         dump_test_info_json()               endnotrun()                         get_args()                          get_pretty_args()            
+                    ```
