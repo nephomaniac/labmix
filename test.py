@@ -1,3 +1,8 @@
+'''
+Basic script to test the labmix installtion is working. 
+Try some imports, execute a basic test, etc.. 
+'''
+
 from lab_utils.net_utils.sshconnection import SshConnection
 from test_utils.cli_test_runner import CliTestRunner
 import sys
