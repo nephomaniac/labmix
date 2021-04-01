@@ -2,7 +2,7 @@ from test_utils.cli_test_runner import CliTestRunner, SkipTestException
 from lab_utils.net_utils.sshconnection import SshConnection
 import copy
 
-# Usage: python example_test.py -h 
+# Usage: python example_test.py -h
 
 ##################################################################################################
 # Create the testcase (TestRunner) object                                                                     #
