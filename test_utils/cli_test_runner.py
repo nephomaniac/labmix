@@ -321,7 +321,7 @@ class CliTestRunner(object):
                                  "default": 'DEBUG'}},
         'username': {'args': ['--ssh-user'],
                       'kwargs': {"help": "ssh  user name to use with the gateway cpe",
-                                 "default": "admin"}},
+                                 "default": "root"}},
         'log_file': {'args': ['--log-file'],
                      'kwargs': {"help": "file path to log to (in addition to stdout",
                                 "default": None}},
