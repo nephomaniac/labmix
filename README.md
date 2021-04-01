@@ -65,9 +65,6 @@ mclark@delldude: [labmix… main|…47] # source labmix_venv/bin/activate
                                - SUCCESS -  TEST:"test1_imports_worked" COMPLETE                                
 ----------------------------------------------------------------------------------------------------------------
 
-Got rstr:FAILED
-Got rstr:NOT_RUN
-Got rstr:PASSED
 [04-01 13:21:20][DEBUG][LabmixInstallTests]: 
 LATEST RESULTS:                                
 -----------------------------------------------
@@ -78,9 +75,7 @@ LATEST RESULTS:
 
 [04-01 13:21:20][DEBUG][LabmixInstallTests]: Printing pre-cleanup results:
 [04-01 13:21:20][INFO][LabmixInstallTests]: Test list results for testcase:LabmixInstallTests
-Got rstr:FAILED
-Got rstr:NOT_RUN
-Got rstr:PASSED
+
 passed:1 failed:0 not_run:0 total:1
 
 ```
