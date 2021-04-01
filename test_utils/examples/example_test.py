@@ -1,6 +1,7 @@
 from test_utils.cli_test_runner import CliTestRunner, SkipTestException
 from lab_utils.net_utils.sshconnection import SshConnection
 import copy
+import sys
 
 # Usage: python example_test.py -h
 
@@ -42,6 +43,10 @@ class ExampleTestSuite(CliTestRunner):
     # newlist = [] 
     # newlist.append(self.create_testunit_from_method(
     #        self.some_method_not_starting_with_test, eof=True))
+    #
+    # Note: each testunits can specifiy whether the test suite should continue or exit by 
+    # setting it's individual eof (end on failure) flag. eof can also be provided during 
+    # run() to apply to all testsunits. 
     #
     # Then can be run by:
     #  <your_cli_test_runner_class>.run(testlist=newlist)
@@ -121,8 +126,22 @@ class ExampleTestSuite(CliTestRunner):
             self.gw_cpe.close()
 
 
-if __name__ == "__main__":
+#########################################################################################
+# Specify what to do if called from the command line 
+# (ie vs being sourced as a class from another file)
+#########################################################################################
 
+if __name__ == "__main__":
+    
+    # Create an instance of our testsuite class
+    # this will provide all the cli -arg and --kwarg params handling for the user input
     test = ExampleTestSuite()
+    
+    ### Now Run the test suite, see cli_test_runner's run() method defintion and docstring
+    # for more details. 
+    # basic options for run(): testlist=None, eof=False, clean_on_exit=None, 
+    #                          test_regex=None, printresults=True, force_dry_run=False
     result = test.run()
-    exit(result)
+    
+    #Always exit with the proper return code 
+    sys.exit(result)
