@@ -1469,7 +1469,6 @@ class CliTestRunner(object):
 
             rstr = getattr(TestResult, result_string)
             print('Got rstr:{0}'.format(rstr))
-            self.log.debug('!!!!!!!!!!!!!!!!!! Got result_string:{0}, rstr:{1}'.format(result_string, rstr))
             results[rstr] = 0
         # increment values in results dict based upon result of each testunit in list
         try:
