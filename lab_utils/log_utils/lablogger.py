@@ -87,7 +87,7 @@ class LabLogger(logging.Logger):
         if childlogger:
             self.__dict__.update(childlogger.__dict__)
 
-        self.logfile = os.path.join(logfile)
+        self.logfile = os.path.join(logfile or "")
         self._default_format = stdout_format or logging.Formatter(
             '[%(asctime)s][%(levelname)s]%(message)s')
         self.file_format = file_format or self._default_format
