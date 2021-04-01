@@ -36,6 +36,18 @@ class ExampleTestSuite(CliTestRunner):
 
     #####################################################################################
     # Create the test methods...
+    # By Default any method prefixed with 'test' is added and run by alpha_numeric order
+    # 
+    # However, any method be added to a test run list despite the methods name. 
+    # newlist = [] 
+    # newlist.append(self.create_testunit_from_method(
+    #        self.some_method_not_starting_with_test, eof=True))
+    #
+    # Then can be run by:
+    #  <your_cli_test_runner_class>.run(testlist=newlist)
+    #
+    # When a test is run from the cli, --test-list can provide a comma delimited set 
+    # test names to run which will also over write the default test list. 
     #####################################################################################
 
     def test1_example(self):
