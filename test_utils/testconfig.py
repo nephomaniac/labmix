@@ -48,15 +48,13 @@ Note:
 This example is using the legacy config with ip, distro, and component info.
 
 >cat /tmp/config.txt
-    1.1.1.1   CENTOS  5.7     64      REPO [CLC WS]
-    1.1.1.2   CENTOS  5.7     64      REPO [NC00]
-
     [mytest]
-    volumes=2
-    image=centos.img
+    gw_ip=192.168.100.1
+    image=http://somepath/latest_version/firmware.img
+    log_level=debug
 
     [joestest]
-    image=ubuntu.img
+    image=http://somepath/old_version/firmware.img
     name=joe
     iterations=3
     output=/tmp/joesoutput.txt
@@ -68,11 +66,7 @@ To retrieve config info from this file from within a test:
 >joesimage = conf.get('joestest','image')
 >
 >print myimage
- centos.img
-
->print conf.legacybuf
- 1.1.1.1   CENTOS  5.7     64      REPO [CLC WS]
- 1.1.1.2   CENTOS  5.7     64      REPO [NC00]
+ "http://somepath/latest_version/firmware.img"
 
 
 '''
