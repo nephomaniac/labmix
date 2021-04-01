@@ -1,15 +1,88 @@
 ### INSTALL 
 ```
- sudo apt install python3-pip
- sudo apt-get install python3-venv
-
- git clone git@bitbucket.org:smartrg/labmix.git
- cd labmix
- python3 -m venv lab_venv 
- source lab_venv/bin/activate
- python setup.py install
- pip install ipython
+See the 'install_helper.sh script for installing these libs and environment. 
 ```
+### Validating an installation
+Try running the test.py script to do a basic validation that he libs, and virtual env has been 
+installed correctly...
+
+source <virt env name>/bin/activate
+python test.py 
+Example:
+```
+mclark@delldude: [labmix… main|…47] # source labmix_venv/bin/activate
+
+(labmix_venv) mclark@delldude: [labmix… main|…47] # python test.py 
+[04-01 13:21:20][INFO][LabmixInstallTests]: 
+               TEST CASE INFO              
+ +------------------+--------------------+ 
+ | NAME             | LabmixInstallTests | 
+ | TEST LIST        | []                 | 
+ | ENVIRONMENT FILE | None               | 
+ +------------------+--------------------+ 
+
+[04-01 13:21:20][INFO][LabmixInstallTests]: 
++------------------+----------------------------------+
+| TEST ARGS        | VALUE                            |
++------------------+----------------------------------+
+| configsections   | ['LabmixInstallTests', 'global'] |
+| cpe_type         | smartos                          |
+| dry_run          | False                            |
+| environment_file | None                             |
+| gw_cpe           | None                             |
+| log_file         | None                             |
+| log_file_level   | DEBUG                            |
+| log_level        | DEBUG                            |
+| no_clean         | False                            |
+| password         | None                             |
+| ssh_user         | root                             |
+| test_list        | None                             |
+| test_regex       | None                             |
++------------------+----------------------------------+
+
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: Creating TestUnit: "test1_imports_worked" with args:
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: Attempting to populate testunit:test1_imports_worked, with testcase.args...
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: Testunit keyword args:{}
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: Got method args:('self',)
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: test unit total args:{}
+[04-01 13:21:20][INFO][test1_imports_worked]: 
+---------------------------------------------------------------------------------------------------------------
+ +-----------------------------------------------------------------------------------------------------------+ 
+ | STARTING TESTUNIT: test1_imports_worked                                                                   | 
+ | METHOD:test1_imports_worked, TEST DESCRIPTION:                                                            | 
+ | None                                                                                                      | 
+ | End on Failure:False                                                                                      | 
+ | Passing ARGS:""                                                                                           | 
+ | Running test method: "test1_imports_worked()"                                                             | 
+ +-----------------------------------------------------------------------------------------------------------+ 
+---------------------------------------------------------------------------------------------------------------
+
+[04-01 13:21:20][DEBUG][test1_imports_worked]: You made it, install looks good!
+[04-01 13:21:20][INFO][test1_imports_worked]: 
+----------------------------------------------------------------------------------------------------------------
+                               - SUCCESS -  TEST:"test1_imports_worked" COMPLETE                                
+----------------------------------------------------------------------------------------------------------------
+
+Got rstr:FAILED
+Got rstr:NOT_RUN
+Got rstr:PASSED
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: 
+LATEST RESULTS:                                
+-----------------------------------------------
+  TOTAL   FAILED   NOT_RUN   PASSED   ELAPSED  
+-----------------------------------------------
+    1       0         0        1         0     
+-----------------------------------------------
+
+[04-01 13:21:20][DEBUG][LabmixInstallTests]: Printing pre-cleanup results:
+[04-01 13:21:20][INFO][LabmixInstallTests]: Test list results for testcase:LabmixInstallTests
+Got rstr:FAILED
+Got rstr:NOT_RUN
+Got rstr:PASSED
+passed:1 failed:0 not_run:0 total:1
+
+```
+
 ## Note: If missing modules/imports fail. Check python versions and paths to make sure things are lined up 
 Example of python executables and paths not lining up everywhere notice 3.8 vs 3.9...
 ```
