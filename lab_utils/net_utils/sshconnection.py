@@ -924,6 +924,10 @@ class SshConnection():
                         if recv is None or len(recv) == 0:
                             self.debug('Session closing (chan)...   ')
                             break
+                        try:
+                            recv = recv.decode('utf-8')
+                        except AttributeError:
+                            pass
                         sys.stdout.write(recv)
                         sys.stdout.flush()
                     except socket.timeout:
