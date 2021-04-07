@@ -1,6 +1,6 @@
 Example shows concurrent execution of commands against a list of IP addresses with individual logging, and status. 
 
-~/python_workspace/labmix/examples$ python remote_commands.py -i 192.168.69.1,192.168.69.201 -c 'uci get network.wan.macaddr && echo ping -c1 192.168.69.1 ' -p ninja
+~/python_workspace/labmix/examples$ python remote_commands.py -i 192.168.69.1,192.168.69.201 -c 'uci get network.wan.macaddr && ping -c1 192.168.69.1 ' -p ninja
 ```
 [2021-03-31 11:47:25,676][DEBUG][RemoteCmds]: Thread: 0, in Q loop...
 [2021-03-31 11:47:25,677][DEBUG][RemoteCmds]: Connecting to new host:192.168.69.1
