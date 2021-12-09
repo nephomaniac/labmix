@@ -6,6 +6,7 @@ __version__ = '1.0.0'
 
 setup(name="labmix",
       version=__version__,
+      python_requires='>=3',
       description="General System Administrative Utilities",
       long_description="General System Administrative Utilities",
       url="",
